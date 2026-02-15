@@ -501,7 +501,7 @@
       justify-content:space-between;
       gap:10px;
       flex-wrap:wrap;
-      z-index:1;
+      z-index:2;
     }
     .modalHdr h2{
       margin:0;
@@ -563,6 +563,65 @@
     .btnSmall.secondary{background:#64748b; color:#fff;}
     .btnSmall.good{background:var(--ok); color:#fff;}
     .btnSmall.danger{background:#dc2626; color:#fff;}
+
+    .detailCard{
+      margin-top:12px;
+      border:4px solid var(--line);
+      border-radius:14px;
+      overflow:hidden;
+      background:#fff;
+      box-shadow:0 10px 26px rgba(2,6,23,.10);
+    }
+    .detailHdr{
+      padding:10px 12px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      background:#f8fafc;
+      border-bottom:4px solid var(--line);
+      font-weight:1000;
+    }
+    .detailHdr .meta{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      min-width:0;
+    }
+    .detailHdr .meta .big{
+      font-size:14px;
+      color:#0b1220;
+      word-break:break-word;
+    }
+    .detailHdr .meta .small{
+      font-size:12px;
+      color:#475569;
+      font-weight:900;
+    }
+    .detailBody{
+      padding:10px 12px 14px;
+    }
+    .miniTabs{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin:6px 0 10px;
+    }
+    .miniTab{
+      border:3px solid var(--line);
+      border-radius:999px;
+      padding:6px 10px;
+      font-weight:1000;
+      background:#fff;
+      cursor:pointer;
+      user-select:none;
+    }
+    .miniTab.active{
+      background:#0ea5e9;
+      color:#fff;
+    }
+    .workTable th{ top: 0; position: sticky; z-index: 0; }
 
     @media (max-width: 520px){
       .hdr h1{font-size:26px;}
@@ -726,6 +785,7 @@
       </div>
 
       <div id="recordsWrap"></div>
+      <div id="recordDetail"></div>
     </div>
   </div>
 </div>
@@ -775,9 +835,8 @@ const SESSION_BANK = {
   C8S1:{title:"C8S1 — Soft 'c' & Soft 'g' rule", markingMode:"phonogram", targets:["c","g"], hint:"Marking: focus on the target phonogram (soft c / soft g)."},
   C8S2:{title:"C8S2 — Vowel teams ('ay', 'ai' say /ā/)", markingMode:"phonogram", targets:["ay","ai"], hint:"Marking: only the target phonogram must be correct (ay / ai)."},
   C8S3:{title:"C8S3 — Multisyllabic words", markingMode:"full", hint:"Marking: whole word spelling must be correct."},
-    C9S1:{title:"C9S1 — Vowel team 'ee' says /ē/", markingMode:"phonogram", targets:["ee"], hint:"Marking: only the target phonogram must be correct (ee)."},
-  C9S2:{title:"C9S2 — Vowel team 'ea' says /ē/ or /ĕ/", markingMode:"phonogram", targets:["ea"], hint:"Marking: only the target phonogram must be correct (ea)."},
-   /* ===== Cycle 9 ===== */
+
+  /* ===== Cycle 9 ===== */
   C9S1:{title:"C9S1 — Vowel team [ee] says /ē/", markingMode:"phonogram", targets:["ee"], hint:"Marking: only the target phonogram must be correct (ee)."},
   C9S2:{title:"C9S2 — Vowel team [ea] says /ē/ or /ĕ/", markingMode:"phonogram", targets:["ea"], hint:"Marking: only the target phonogram must be correct (ea)."},
   C9S3:{title:"C9S3 — Vowel team [ie] says /ī/ or /ē/", markingMode:"phonogram", targets:["ie"], hint:"Marking: only the target phonogram must be correct (ie)."},
@@ -801,36 +860,31 @@ const SESSION_BANK = {
   C13S1:{title:"C13S1 — Vowel teams [ou, ow] says /ow/", markingMode:"phonogram", targets:["ou","ow"], hint:"Marking: only the target phonogram must be correct (ou / ow)."},
   C13S2:{title:"C13S2 — Vowel teams [oi, oy] say /oi/", markingMode:"phonogram", targets:["oi","oy"], hint:"Marking: only the target phonogram must be correct (oi / oy)."},
   C13S3:{title:"C13S3 — Vowel team [igh] says /ī/", markingMode:"phonogram", targets:["igh"], hint:"Marking: only the target phonogram must be correct (igh)."},
+
   /* ===== Cycle 14 ===== */
   C14S1:{title:"C14S1 — Consonant digraph [kn] says /n/", markingMode:"phonogram", targets:["kn"], hint:"Marking: only the target phonogram must be correct (kn)."},
   C14S2:{title:"C14S2 — Consonant digraph [ng] says /ŋ/, [nk] says /ŋk/", markingMode:"phonogram", targets:["ng","nk"], hint:"Marking: only the target phonogram must be correct (ng / nk)."},
   C14S3:{title:"C14S3 — Multisyllabic words", markingMode:"full", hint:"Marking: whole word spelling must be correct."},
+
   /* ===== Cycle 15 ===== */
   C15S1:{title:"C15S1 — Revision of multisyllabic words", markingMode:"full", hint:"Marking: whole word spelling must be correct."},
   C15S2:{title:"C15S2 — Revision of multisyllabic words", markingMode:"full", hint:"Marking: whole word spelling must be correct."},
   C15S3:{title:"C15S3 — Revision of multisyllabic words", markingMode:"full", hint:"Marking: whole word spelling must be correct."},
+
   /* ===== Cycle 16 ===== */
   C16S1:{title:"C16S1 — Plural suffixes '-s' and '-es'", markingMode:"affix", targets:["es","s"], hint:"Marking: only the target suffix must be correct (-s / -es)."},
-C16S2:{title:"C16S2 — Past Tense Suffix '-ed'", markingMode:"affix", targets:["ed"], hint:"Marking: only the target suffix must be correct (-ed)."},
-C16S3:{title:"C16S3 — Prefixes 'un-' and 'in-'", markingMode:"affix", targets:["un","in"], hint:"Marking: only the target prefix must be correct (un- / in-)."},
+  C16S2:{title:"C16S2 — Past Tense Suffix '-ed'", markingMode:"affix", targets:["ed"], hint:"Marking: only the target suffix must be correct (-ed)."},
+  C16S3:{title:"C16S3 — Prefixes 'un-' and 'in-'", markingMode:"affix", targets:["un","in"], hint:"Marking: only the target prefix must be correct (un- / in-)."},
 
-C17S1:{title:"C17S1 — Suffixes '-ing' and '-ful'", markingMode:"affix", targets:["ing","ful"], hint:"Marking: only the target suffix must be correct (-ing / -ful)."},
-C17S2:{title:"C17S2 — Prefixes 're-' and 'dis-'", markingMode:"affix", targets:["re","dis"], hint:"Marking: only the target prefix must be correct (re- / dis-)."},
-C17S3:{title:"C17S3 — Comparative/Superlative suffixes '-er' and '-est'", markingMode:"affix", targets:["est","er"], hint:"Marking: only the target suffix must be correct (-er / -est)."},
+  /* ===== Cycle 17 ===== */
+  C17S1:{title:"C17S1 — Suffixes '-ing' and '-ful'", markingMode:"affix", targets:["ing","ful"], hint:"Marking: only the target suffix must be correct (-ing / -ful)."},
+  C17S2:{title:"C17S2 — Prefixes 're-' and 'dis-'", markingMode:"affix", targets:["re","dis"], hint:"Marking: only the target prefix must be correct (re- / dis-)."},
+  C17S3:{title:"C17S3 — Comparative/Superlative suffixes '-er' and '-est'", markingMode:"affix", targets:["est","er"], hint:"Marking: only the target suffix must be correct (-er / -est)."},
 
-C18S1:{title:"C18S1 — Prefix 'mis-'", markingMode:"affix", targets:["mis"], hint:"Marking: only the target prefix must be correct (mis-)."},
-C18S2:{title:"C18S2 — Prefix 'pre-'", markingMode:"affix", targets:["pre"], hint:"Marking: only the target prefix must be correct (pre-)."},
-C18S3:{title:"C18S3 — Suffix '-less'", markingMode:"affix", targets:["less"], hint:"Marking: only the target suffix must be correct (-less)."}
-
-
-
-
-
-
-
-
-
-
+  /* ===== Cycle 18 ===== */
+  C18S1:{title:"C18S1 — Prefix 'mis-'", markingMode:"affix", targets:["mis"], hint:"Marking: only the target prefix must be correct (mis-)."},
+  C18S2:{title:"C18S2 — Prefix 'pre-'", markingMode:"affix", targets:["pre"], hint:"Marking: only the target prefix must be correct (pre-)."},
+  C18S3:{title:"C18S3 — Suffix '-less'", markingMode:"affix", targets:["less"], hint:"Marking: only the target suffix must be correct (-less)."}
 };
 
 /* ==========================================================
@@ -965,12 +1019,8 @@ const TRIES_BANK = {
     2:[{word:"concert",sentence:"Concert. I enjoyed the Children’s Day concert. Concert."},{word:"painter",sentence:"Painter. The painter applied a fresh coat of paint on the new building. Painter."}],
     3:[{word:"gentle",sentence:"Gentle. You need to be gentle with the little puppy. Gentle."},{word:"crayon",sentence:"Crayon. The boy coloured his drawing with a green crayon. Crayon."}]
   },
-    /* =========================
-     Cycle 9
-     Try 1 = PM (left)
-     Try 2 = PM during DI (middle)
-     Try 3 = PM during DI (right)
-     ========================= */
+
+  /* ===== Cycle 9 ===== */
   C9S1:{
     1:[{word:"green",sentence:"Green. I have never seen a cat with green eyes. Green."},{word:"feel",sentence:"Feel. I feel awful about losing my favourite book. Feel."}],
     2:[{word:"sleep",sentence:"Sleep. Do you know that fish sleep with their eyes open? Sleep."},{word:"three",sentence:"Three. He was tired after running three laps. Three."}],
@@ -987,10 +1037,7 @@ const TRIES_BANK = {
     3:[{word:"pie",sentence:"Pie. My mother baked an apple pie for dessert. Pie."},{word:"grief",sentence:"Grief. Josie was filled with grief when she lost her pet. Grief."}]
   },
 
-  /* =========================
-     Cycle 10 (ORDER FIXED)
-     Try 1 = left, Try 2 = middle, Try 3 = right
-     ========================= */
+  /* ===== Cycle 10 ===== */
   C10S1:{
     1:[{word:"seize",sentence:"Seize. Seize the chance while you can! Seize."},{word:"vein",sentence:"Vein. The nurse injected the vaccine into his vein. Vein."}],
     2:[{word:"protein",sentence:"Protein. Meat contains a high amount of protein. Protein."},{word:"rein",sentence:"Rein. Pull on the left rein to make the horse go left. Rein."}],
@@ -1007,9 +1054,7 @@ const TRIES_BANK = {
     3:[{word:"stream",sentence:"Stream. We waded across the shallow stream. Stream."},{word:"convey",sentence:"Convey. Can you convey this message to him? Convey."}]
   },
 
-  /* =========================
-     Cycle 11
-     ========================= */
+  /* ===== Cycle 11 ===== */
   C11S1:{
     1:[{word:"float",sentence:"Float. Coconuts float on water. Float."},{word:"shown",sentence:"Shown. The movie will be shown in theatres. Shown."}],
     2:[{word:"load",sentence:"Load. The man was carrying a heavy load. Load."},{word:"grow",sentence:"Grow. Drinking milk can help you to grow taller. Grow."}],
@@ -1026,9 +1071,7 @@ const TRIES_BANK = {
     3:[{word:"cruise",sentence:"Cruise. My parents are bringing me on a cruise during the school holidays. Cruise."},{word:"threw",sentence:"Threw. She threw the ball to her friend. Threw."}]
   },
 
-  /* =========================
-     Cycle 12
-     ========================= */
+  /* ===== Cycle 12 ===== */
   C12S1:{
     1:[{word:"due",sentence:"Due. Your homework is due tomorrow. Due."},{word:"stew",sentence:"Stew. My mother cooked beef stew for dinner. Stew."}],
     2:[{word:"rescue",sentence:"Rescue. He managed to rescue the drowning puppy. Rescue."},{word:"dew",sentence:"Dew. The grass was wet with morning dew. Dew."}],
@@ -1045,9 +1088,7 @@ const TRIES_BANK = {
     3:[{word:"strawberry",sentence:"Strawberry. He spread strawberry jam on the toast. Strawberry."},{word:"sailboat",sentence:"Sailboat. My uncle took us on a trip on his sailboat. Sailboat."}]
   },
 
-  /* =========================
-     Cycle 13
-     ========================= */
+  /* ===== Cycle 13 ===== */
   C13S1:{
     1:[{word:"sound",sentence:"Sound. Did you hear that sound? Sound."},{word:"town",sentence:"Town. I took the bus to town. Town."}],
     2:[{word:"amount",sentence:"Amount. He brought a large amount of money to the bank. Amount."},{word:"brown",sentence:"Brown. I saw a big brown bear at the zoo. Brown."}],
@@ -1063,285 +1104,91 @@ const TRIES_BANK = {
     2:[{word:"light",sentence:"Light. Remember to switch off the lights when you leave the room. Light."},{word:"delight",sentence:"Delight. It was such a delight to meet you! Delight."}],
     3:[{word:"fight",sentence:"Fight. He broke his nose in the fight. Fight."},{word:"sunlight",sentence:"Sunlight. I was dazzled by the sunlight. Sunlight."}]
   },
-  /* =========================
-     Cycle 14
-     ========================= */
 
+  /* ===== Cycle 14 ===== */
   C14S1:{
-    1:[
-      {word:"knot",   sentence:"Knot. I can’t untie the dead knot on the rope. Knot."},
-      {word:"knuckle",sentence:"Knuckle. She cracked her knuckle loudly. Knuckle."}
-    ],
-    2:[
-      {word:"knife", sentence:"Knife. Please be careful when you handle a knife. Knife."},
-      {word:"knit",  sentence:"Knit. She loves to knit blankets for her dogs. Knit."}
-    ],
-    3:[
-      {word:"knight",sentence:"Knight. The knight protects the king and queen. Knight."},
-      {word:"known", sentence:"Known. I have known you since I was ten. Known."}
-    ]
+    1:[{word:"knot",sentence:"Knot. I can’t untie the dead knot on the rope. Knot."},{word:"knuckle",sentence:"Knuckle. She cracked her knuckle loudly. Knuckle."}],
+    2:[{word:"knife",sentence:"Knife. Please be careful when you handle a knife. Knife."},{word:"knit",sentence:"Knit. She loves to knit blankets for her dogs. Knit."}],
+    3:[{word:"knight",sentence:"Knight. The knight protects the king and queen. Knight."},{word:"known",sentence:"Known. I have known you since I was ten. Known."}]
   },
-
   C14S2:{
-    1:[
-      {word:"morning",sentence:"Morning. I go for a jog every morning. Morning."},
-      {word:"blank",  sentence:"Blank. Our teacher gave us a blank sheet of paper. Blank."}
-    ],
-    2:[
-      {word:"lung",  sentence:"Lung. The lung is an organ that helps us breathe. Lung."},
-      {word:"think", sentence:"Think. Think about what you want to be when you grow up. Think."}
-    ],
-    3:[
-      {word:"king",  sentence:"King. The king lives in a huge castle. King."},
-      {word:"clunk", sentence:"Clunk. He shut the van door with a clunk. Clunk."}
-    ]
+    1:[{word:"morning",sentence:"Morning. I go for a jog every morning. Morning."},{word:"blank",sentence:"Blank. Our teacher gave us a blank sheet of paper. Blank."}],
+    2:[{word:"lung",sentence:"Lung. The lung is an organ that helps us breathe. Lung."},{word:"think",sentence:"Think. Think about what you want to be when you grow up. Think."}],
+    3:[{word:"king",sentence:"King. The king lives in a huge castle. King."},{word:"clunk",sentence:"Clunk. He shut the van door with a clunk. Clunk."}]
   },
-
   C14S3:{
-    1:[
-      {word:"kneecap",  sentence:"Kneecap. The kneecap is a small bone. Kneecap."},
-      {word:"highway",  sentence:"Highway. Traffic moves quickly on the highway. Highway."}
-    ],
-    2:[
-      {word:"boomerang",sentence:"Boomerang. A boomerang is a curved throwing stick. Boomerang."},
-      {word:"toilet",   sentence:"Toilet. Do visit the toilet before you head out. Toilet."}
-    ],
-    3:[
-      {word:"blanket", sentence:"Blanket. She curled up under her blanket. Blanket."},
-      {word:"belong",  sentence:"Belong. That item does not belong to you. Belong."}
-    ]
+    1:[{word:"kneecap",sentence:"Kneecap. The kneecap is a small bone. Kneecap."},{word:"highway",sentence:"Highway. Traffic moves quickly on the highway. Highway."}],
+    2:[{word:"boomerang",sentence:"Boomerang. A boomerang is a curved throwing stick. Boomerang."},{word:"toilet",sentence:"Toilet. Do visit the toilet before you head out. Toilet."}],
+    3:[{word:"blanket",sentence:"Blanket. She curled up under her blanket. Blanket."},{word:"belong",sentence:"Belong. That item does not belong to you. Belong."}]
   },
-  /* =========================
-     Cycle 15
-     ========================= */
 
+  /* ===== Cycle 15 ===== */
   C15S1:{
-    1:[
-      {word:"delay",   sentence:"Delay. There was a delay in the food delivery. Delay."},
-      {word:"daytime", sentence:"Daytime. I enjoy going for a jog in the daytime. Daytime."}
-    ],
-    2:[
-      {word:"afraid", sentence:"Afraid. My sister is afraid of lizards. Afraid."},
-      {word:"needle", sentence:"Needle. He gave a shout when he was pricked by the needle. Needle."}
-    ],
-    3:[
-      {word:"weather", sentence:"Weather. The sunny weather is perfect for a hike. Weather."},
-      {word:"leader",  sentence:"Leader. She has what it takes to be a good leader. Leader."}
-    ]
+    1:[{word:"delay",sentence:"Delay. There was a delay in the food delivery. Delay."},{word:"daytime",sentence:"Daytime. I enjoy going for a jog in the daytime. Daytime."}],
+    2:[{word:"afraid",sentence:"Afraid. My sister is afraid of lizards. Afraid."},{word:"needle",sentence:"Needle. He gave a shout when he was pricked by the needle. Needle."}],
+    3:[{word:"weather",sentence:"Weather. The sunny weather is perfect for a hike. Weather."},{word:"leader",sentence:"Leader. She has what it takes to be a good leader. Leader."}]
   },
-
   C15S2:{
-    1:[
-      {word:"between", sentence:"Between. The boy stood between his parents. Between."},
-      {word:"jersey",  sentence:"Jersey. He wore his new jersey for the football match. Jersey."}
-    ],
-    2:[
-      {word:"highway",  sentence:"Highway. The cars travel very quickly on the highway. Highway."},
-      {word:"sightsee", sentence:"Sightsee. I brought my friend from overseas around to sightsee. Sightsee."}
-    ],
-    3:[
-      {word:"forfeit", sentence:"Forfeit. If you do not complete the form, you will forfeit the prize you have won. Forfeit."},
-      {word:"around",  sentence:"Around. We ran around the school during PE lesson. Around."}
-    ]
+    1:[{word:"between",sentence:"Between. The boy stood between his parents. Between."},{word:"jersey",sentence:"Jersey. He wore his new jersey for the football match. Jersey."}],
+    2:[{word:"highway",sentence:"Highway. The cars travel very quickly on the highway. Highway."},{word:"sightsee",sentence:"Sightsee. I brought my friend from overseas around to sightsee. Sightsee."}],
+    3:[{word:"forfeit",sentence:"Forfeit. If you do not complete the form, you will forfeit the prize you have won. Forfeit."},{word:"around",sentence:"Around. We ran around the school during PE lesson. Around."}]
   },
-   C15S3:{
-    1:[
-      {word:"elbow",     sentence:"Elbow. She hurt her elbow when she fell down. Elbow."},
-      {word:"chipmunk",  sentence:"Chipmunk. I saw a chipmunk on the tree branch. Chipmunk."}
-    ],
-    2:[
-      {word:"footprint", sentence:"Footprint. I left my footprint in the sand. Footprint."},
-      {word:"allow",     sentence:"Allow. The teachers allow us to go for an early break. Allow."}
-    ],
-    3:[
-      {word:"approach",  sentence:"Approach. We were told not to approach the wild animals at the safari. Approach."},
-      {word:"raincoat",  sentence:"Raincoat. We quickly put on our raincoat when it started raining on our hike. Raincoat."}
-    ]
+  C15S3:{
+    1:[{word:"elbow",sentence:"Elbow. She hurt her elbow when she fell down. Elbow."},{word:"chipmunk",sentence:"Chipmunk. I saw a chipmunk on the tree branch. Chipmunk."}],
+    2:[{word:"footprint",sentence:"Footprint. I left my footprint in the sand. Footprint."},{word:"allow",sentence:"Allow. The teachers allow us to go for an early break. Allow."}],
+    3:[{word:"approach",sentence:"Approach. We were told not to approach the wild animals at the safari. Approach."},{word:"raincoat",sentence:"Raincoat. We quickly put on our raincoat when it started raining on our hike. Raincoat."}]
   },
-  /* =========================
-     Cycle 16
-     ========================= */
 
+  /* ===== Cycle 16 ===== */
   C16S1:{
-    /* Plural -s / -es */
-
-    1:[ // PM (left column)
-      {word:"digits", sentence:"Digits. My phone number has eight digits in total. Digits."},
-      {word:"boxes",  sentence:"Boxes. Could you help me carry these boxes upstairs? Boxes."}
-    ],
-
-    2:[ // PM during DI (middle column)
-      {word:"books",   sentence:"Books. I borrowed five books from the library. Books."},
-      {word:"matches", sentence:"Matches. The soccer team is competing in five more matches. Matches."}
-    ],
-
-    3:[ // PM during DI (right column)
-      {word:"nights",  sentence:"Nights. There are some nights when I can’t fall asleep. Nights."},
-      {word:"benches", sentence:"Benches. The children sat on the park benches. Benches."}
-    ]
+    1:[{word:"digits", sentence:"Digits. My phone number has eight digits in total. Digits."},{word:"boxes",  sentence:"Boxes. Could you help me carry these boxes upstairs? Boxes."}],
+    2:[{word:"books",   sentence:"Books. I borrowed five books from the library. Books."},{word:"matches", sentence:"Matches. The soccer team is competing in five more matches. Matches."}],
+    3:[{word:"nights",  sentence:"Nights. There are some nights when I can’t fall asleep. Nights."},{word:"benches", sentence:"Benches. The children sat on the park benches. Benches."}]
   },
-
   C16S2:{
-    /* Past tense -ed */
-
-    1:[ // PM (left column)
-      {word:"crawled",  sentence:"Crawled. The lizard crawled across the field. Crawled."},
-      {word:"reached",  sentence:"Reached. We reached our destination at noon. Reached."},
-      {word:"visited",  sentence:"Visited. I visited my grandmother over the weekend. Visited."}
-    ],
-
-    2:[ // PM during DI (middle column)
-      {word:"played",  sentence:"Played. The students played in the field after school. Played."},
-      {word:"picked",  sentence:"Picked. These fruits are fresh, I picked them this morning. Picked."},
-      {word:"rested",  sentence:"Rested. The hikers rested for an hour before carrying on. Rested."}
-    ],
-
-    3:[ // PM during DI (right column)
-      {word:"walked",  sentence:"Walked. I walked to my friend’s house which was nearby. Walked."},
-      {word:"fished",  sentence:"Fished. The man fished all night and caught ten fishes. Fished."},
-      {word:"waited",  sentence:"Waited. The students waited for the teacher at the canteen. Waited."}
-    ]
+    1:[{word:"crawled",  sentence:"Crawled. The lizard crawled across the field. Crawled."},{word:"reached",  sentence:"Reached. We reached our destination at noon. Reached."},{word:"visited",  sentence:"Visited. I visited my grandmother over the weekend. Visited."}],
+    2:[{word:"played",  sentence:"Played. The students played in the field after school. Played."},{word:"picked",  sentence:"Picked. These fruits are fresh, I picked them this morning. Picked."},{word:"rested",  sentence:"Rested. The hikers rested for an hour before carrying on. Rested."}],
+    3:[{word:"walked",  sentence:"Walked. I walked to my friend’s house which was nearby. Walked."},{word:"fished",  sentence:"Fished. The man fished all night and caught ten fishes. Fished."},{word:"waited",  sentence:"Waited. The students waited for the teacher at the canteen. Waited."}]
   },
   C16S3:{
-    /* Prefixes un- / in- */
-
-    1:[ // PM (left column)
-      {word:"unscrew",   sentence:"Unscrew. I can’t unscrew the lid of this jar as it is too tight. Unscrew."},
-      {word:"incomplete",sentence:"Incomplete. My homework was incomplete when I submitted it. Incomplete."}
-    ],
-
-    2:[ // PM during DI (middle column)
-      {word:"unlucky",   sentence:"Unlucky. It was an unlucky day for me as I got caught in the heavy rain. Unlucky."},
-      {word:"incorrect", sentence:"Incorrect. Your pronunciation of the word is incorrect. Incorrect."}
-    ],
-
-    3:[ // PM during DI (right column)
-      {word:"unhappy", sentence:"Unhappy. John was unhappy as he lost his book. Unhappy."},
-      {word:"insane",  sentence:"Insane. You must be insane if you think you can fly. Insane."}
-    ]
+    1:[{word:"unscrew",   sentence:"Unscrew. I can’t unscrew the lid of this jar as it is too tight. Unscrew."},{word:"incomplete",sentence:"Incomplete. My homework was incomplete when I submitted it. Incomplete."}],
+    2:[{word:"unlucky",   sentence:"Unlucky. It was an unlucky day for me as I got caught in the heavy rain. Unlucky."},{word:"incorrect", sentence:"Incorrect. Your pronunciation of the word is incorrect. Incorrect."}],
+    3:[{word:"unhappy", sentence:"Unhappy. John was unhappy as he lost his book. Unhappy."},{word:"insane",  sentence:"Insane. You must be insane if you think you can fly. Insane."}]
   },
-  /* =========================
-     Cycle 17
-     ========================= */
 
+  /* ===== Cycle 17 ===== */
   C17S1:{
-    /* -ing / -ful */
-
-    1:[ // PM (left)
-      {word:"singing",   sentence:"Singing. The choir is singing for our school festival. Singing."},
-      {word:"stressful", sentence:"Stressful. It is stressful to perform in front of the entire school. Stressful."}
-    ],
-
-    2:[ // DI (middle)
-      {word:"feeling",   sentence:"Feeling. He did not go to school as he was feeling unwell. Feeling."},
-      {word:"powerful",  sentence:"Powerful. The King is a very powerful man. Powerful."}
-    ],
-
-    3:[ // DI (right)
-      {word:"drawing",  sentence:"Drawing. The girl is drawing a picture of her pet dog. Drawing."},
-      {word:"thankful", sentence:"Thankful. I am thankful to my parents for taking care of me. Thankful."}
-    ]
+    1:[{word:"singing",   sentence:"Singing. The choir is singing for our school festival. Singing."},{word:"stressful", sentence:"Stressful. It is stressful to perform in front of the entire school. Stressful."}],
+    2:[{word:"feeling",   sentence:"Feeling. He did not go to school as he was feeling unwell. Feeling."},{word:"powerful",  sentence:"Powerful. The King is a very powerful man. Powerful."}],
+    3:[{word:"drawing",  sentence:"Drawing. The girl is drawing a picture of her pet dog. Drawing."},{word:"thankful", sentence:"Thankful. I am thankful to my parents for taking care of me. Thankful."}]
   },
-
   C17S2:{
-    /* re- / dis- */
-
-    1:[ // PM (left)
-      {word:"reread",    sentence:"Reread. She had to reread the whole text to understand what it was saying. Reread."},
-      {word:"disliked",  sentence:"Disliked. He has always disliked sitting behind taller people. Disliked."}
-    ],
-
-    2:[ // DI (middle)
-      {word:"reuse",     sentence:"Reuse. We can reuse our bottles to help save the environment. Reuse."},
-      {word:"disbelief", sentence:"Disbelief. She was in disbelief when she heard that she scored full marks. Disbelief."}
-    ],
-
-    3:[ // DI (right)
-      {word:"rethink", sentence:"Rethink. You need to rethink this matter before making your decision. Rethink."},
-      {word:"disobey", sentence:"Disobey. We must not disobey the safety regulations at the theme park. Disobey."}
-    ]
+    1:[{word:"reread",    sentence:"Reread. She had to reread the whole text to understand what it was saying. Reread."},{word:"disliked",  sentence:"Disliked. He has always disliked sitting behind taller people. Disliked."}],
+    2:[{word:"reuse",     sentence:"Reuse. We can reuse our bottles to help save the environment. Reuse."},{word:"disbelief", sentence:"Disbelief. She was in disbelief when she heard that she scored full marks. Disbelief."}],
+    3:[{word:"rethink", sentence:"Rethink. You need to rethink this matter before making your decision. Rethink."},{word:"disobey", sentence:"Disobey. We must not disobey the safety regulations at the theme park. Disobey."}]
   },
   C17S3:{
-    /* -er / -est */
-
-    1:[ // PM (left column)
-      {word:"darker",  sentence:"Darker. The sky became darker in the evening. Darker."},
-      {word:"smallest",sentence:"Smallest. What is the smallest animal in the world? Smallest."}
-    ],
-
-    2:[ // PM during DI (middle column)
-      {word:"greater", sentence:"Greater. The number ten has a greater value than the number five. Greater."},
-      {word:"tallest", sentence:"Tallest. He is the tallest student in class. Tallest."}
-    ],
-
-    3:[ // PM during DI (right column)
-      {word:"longer",  sentence:"Longer. Can you stay a little longer for the party? Longer."},
-      {word:"cleanest",sentence:"Cleanest. I have the cleanest room in my family. Cleanest."}
-    ]
+    1:[{word:"darker",  sentence:"Darker. The sky became darker in the evening. Darker."},{word:"smallest",sentence:"Smallest. What is the smallest animal in the world? Smallest."}],
+    2:[{word:"greater", sentence:"Greater. The number ten has a greater value than the number five. Greater."},{word:"tallest",sentence:"Tallest. He is the tallest student in class. Tallest."}],
+    3:[{word:"longer",  sentence:"Longer. Can you stay a little longer for the party? Longer."},{word:"cleanest",sentence:"Cleanest. I have the cleanest room in my family. Cleanest."}]
   },
-  /* =========================
-     Cycle 18
-     ========================= */
 
+  /* ===== Cycle 18 ===== */
   C18S1:{
-    /* mis- */
-
-    1:[ // PM (left)
-      {word:"misuse",  sentence:"Misuse. Do not misuse the class money and buy games for yourself. Misuse."},
-      {word:"mislead", sentence:"Mislead. This information is incorrect and could mislead the public. Mislead."}
-    ],
-
-    2:[ // DI (middle)
-      {word:"misplace", sentence:"Misplace. How could you misplace your bus card twice? Misplace."},
-      {word:"miscount", sentence:"Miscount. Be careful not to miscount the money in our class fund. Miscount."}
-    ],
-
-    3:[ // DI (right)
-      {word:"misbehave", sentence:"Misbehave. Do not misbehave when the teacher is not in class. Misbehave."},
-      {word:"mistrust",  sentence:"Mistrust. I am filled with mistrust for him as he had lied to us. Mistrust."}
-    ]
+    1:[{word:"misuse",  sentence:"Misuse. Do not misuse the class money and buy games for yourself. Misuse."},{word:"mislead", sentence:"Mislead. This information is incorrect and could mislead the public. Mislead."}],
+    2:[{word:"misplace", sentence:"Misplace. How could you misplace your bus card twice? Misplace."},{word:"miscount", sentence:"Miscount. Be careful not to miscount the money in our class fund. Miscount."}],
+    3:[{word:"misbehave", sentence:"Misbehave. Do not misbehave when the teacher is not in class. Misbehave."},{word:"mistrust",  sentence:"Mistrust. I am filled with mistrust for him as he had lied to us. Mistrust."}]
   },
-
   C18S2:{
-    /* pre- */
-
-    1:[ // PM (left)
-      {word:"pretest", sentence:"Pretest. They have to do a pretest to see if they are ready for the actual test. Pretest."},
-      {word:"premix",  sentence:"Premix. The store helped us to premix the spices for the curry. Premix."}
-    ],
-
-    2:[ // DI (middle)
-      {word:"precook", sentence:"Precook. I usually precook my lunch and store it in the fridge the night before. Precook."},
-      {word:"prepaid", sentence:"Prepaid. I loaded my prepaid card with some money. Prepaid."}
-    ],
-
-    3:[ // DI (right)
-      {word:"preheat",  sentence:"Preheat. Preheat the oven before placing the food inside it. Preheat."},
-      {word:"preview",  sentence:"Preview. The actors were invited to a sneak preview of the movie. Preview."}
-    ]
+    1:[{word:"pretest", sentence:"Pretest. They have to do a pretest to see if they are ready for the actual test. Pretest."},{word:"premix",  sentence:"Premix. The store helped us to premix the spices for the curry. Premix."}],
+    2:[{word:"precook", sentence:"Precook. I usually precook my lunch and store it in the fridge the night before. Precook."},{word:"prepaid", sentence:"Prepaid. I loaded my prepaid card with some money. Prepaid."}],
+    3:[{word:"preheat",  sentence:"Preheat. Preheat the oven before placing the food inside it. Preheat."},{word:"preview",  sentence:"Preview. The actors were invited to a sneak preview of the movie. Preview."}]
   },
   C18S3:{
-    1:[ // PM (left)
-      {word:"restless", sentence:"Restless. He was feeling restless at home, so he decided to go for a walk. Restless."},
-      {word:"harmless", sentence:"Harmless. My cat is harmless and will not scratch you. Harmless."}
-    ],
-    2:[ // PM during DI (middle)
-      {word:"endless",  sentence:"Endless. The supply of water in Singapore is not endless, so we must save water. Endless."},
-      {word:"hopeless", sentence:"Hopeless. She started to feel hopeless about finding her lost ring. Hopeless."}
-    ],
-    3:[ // PM during DI (right)
-      {word:"helpless", sentence:"Helpless. The puppy was trapped and helpless until it was rescued from the drainpipe. Helpless."},
-      {word:"homeless", sentence:"Homeless. There is a place for people who are homeless to sleep in. Homeless."}
-    ]
-  },
-
-
-
-
-
-
-
-
+    1:[{word:"restless", sentence:"Restless. He was feeling restless at home, so he decided to go for a walk. Restless."},{word:"harmless", sentence:"Harmless. My cat is harmless and will not scratch you. Harmless."}],
+    2:[{word:"endless",  sentence:"Endless. The supply of water in Singapore is not endless, so we must save water. Endless."},{word:"hopeless", sentence:"Hopeless. She started to feel hopeless about finding her lost ring. Hopeless."}],
+    3:[{word:"helpless", sentence:"Helpless. The puppy was trapped and helpless until it was rescued from the drainpipe. Helpless."},{word:"homeless", sentence:"Homeless. There is a place for people who are homeless to sleep in. Homeless."}]
+  }
 };
 
 let SESSION_INFO = {};
@@ -1352,7 +1199,7 @@ const PASSWORD = "0000";
 /* ======================
    Teacher Records (NOT cleared by Always-Clear kit)
    ====================== */
-const TEACHER_KEY = "PM_TEACHER_RECORDS::v1";
+const TEACHER_KEY = "PM_TEACHER_RECORDS::v2"; // v2 includes pupil work
 
 /* ======================
    DOM
@@ -1392,6 +1239,7 @@ const teacherModal = document.getElementById("teacherModal");
 const closeTeacher = document.getElementById("closeTeacher");
 const teacherSearch = document.getElementById("teacherSearch");
 const recordsWrap = document.getElementById("recordsWrap");
+const recordDetail = document.getElementById("recordDetail");
 const saveRecordBtn = document.getElementById("saveRecordBtn");
 const exportRecordsBtn = document.getElementById("exportRecordsBtn");
 const importRecordsFile = document.getElementById("importRecordsFile");
@@ -1445,19 +1293,6 @@ function ensureUnlocked(){
   unlocked = true;
   unlockAudioBtn.textContent = "Audio Unlocked";
   unlockAudioBtn.disabled = true;
-}
-
-function findAffixInExpected(expRaw){
-  const exp = cleanAnswer(expRaw);
-  const targets = (SESSION_INFO.targets || []).slice()
-    .sort((a,b)=>b.length-a.length); // prefer longer (e.g. "es" before "s")
-
-  for(const tg of targets){
-    if(!tg) continue;
-    if(exp.startsWith(tg)) return {mode:"affix", pos:"prefix", tg};
-    if(exp.endsWith(tg))   return {mode:"affix", pos:"suffix", tg};
-  }
-  return {mode:"full"};
 }
 
 function cleanAnswer(s){
@@ -1700,6 +1535,19 @@ function captureAnswers(){
   }
 }
 
+function findAffixInExpected(expRaw){
+  const exp = cleanAnswer(expRaw);
+  const targets = (SESSION_INFO.targets || []).slice()
+    .sort((a,b)=>b.length-a.length); // prefer longer (e.g. "es" before "s")
+
+  for(const tg of targets){
+    if(!tg) continue;
+    if(exp.startsWith(tg)) return {mode:"affix", pos:"prefix", tg};
+    if(exp.endsWith(tg))   return {mode:"affix", pos:"suffix", tg};
+  }
+  return {mode:"full"};
+}
+
 /* ---- phonogram marking (your rule) ----
    If session has targets: word is correct as long as the target phonogram in the expected word
    is spelled correctly at ALL positions where it appears in the expected word.
@@ -1719,28 +1567,19 @@ function findTargetsInExpected(exp){
   }
   return {mode:"full"};
 }
-function allPositionsOf(s, sub){
-  const pos = [];
-  let i = 0;
+
+function countOccurrences(s, sub){
+  if(!sub) return 0;
+  let c = 0, i = 0;
   while(true){
     const j = s.indexOf(sub, i);
     if(j === -1) break;
-    pos.push(j);
-    i = j + 1;
-  }
-  return pos;
-}
-function countOccurrences(s, sub){
- if(!sub) return 0;
-let c = 0, i = 0;
-while(true){
-const j = s.indexOf(sub, i);
-    if(j === -1) break;
     c++;
-    i = j + sub.length; // non-overlapping (e.g. "ss" in "dress")
+    i = j + sub.length; // non-overlapping
   }
   return c;
 }
+
 function isCorrect(expected, raw){
   const exp = cleanAnswer(expected);
   const ans = cleanAnswer(raw);
@@ -1751,18 +1590,16 @@ function isCorrect(expected, raw){
     if(pick.mode !== "affix") return ans === exp; // fallback
     const tg = pick.tg;
     if(pick.pos === "prefix"){
-      // award if prefix is correct at the start
       return ans.startsWith(tg);
     }
-    // suffix
     return ans.endsWith(tg);
   }
 
-  // ---- PHONOGRAM marking (your existing rule) ----
-    if(SESSION_INFO.markingMode === "phonogram"){
+  // ---- PHONOGRAM marking ----
+  if(SESSION_INFO.markingMode === "phonogram"){
     const pick = findTargetsInExpected(exp);
 
-    // magic-e stays whole-word (pattern-based)
+    // magic-e stays whole-word
     if(pick.mode === "magicE"){
       return ans === exp;
     }
@@ -1772,17 +1609,14 @@ function isCorrect(expected, raw){
 
       // ✅ Target-only rule (SHIFT-TOLERANT):
       // Award mark if the response contains the target phonogram
-      // at least as many times as the expected word contains it,
-      // regardless of other letter errors.
+      // at least as many times as the expected word contains it.
       const need = countOccurrences(exp, tg) || 1;
       const got  = countOccurrences(ans, tg);
       return got >= need;
     }
 
-    // fallback
     return ans === exp;
   }
-
 
   // ---- FULL word marking ----
   return ans === exp;
@@ -1820,7 +1654,7 @@ function markTry(t){
     const ok = isCorrect(expected, raw);
     if(ok) correct++;
 
-   let hint = "";
+    let hint = "";
     if(SESSION_INFO.markingMode === "phonogram"){
       const pick = findTargetsInExpected(expected);
       if(pick.mode === "phonogram"){
@@ -1835,6 +1669,7 @@ function markTry(t){
         hint = `<span style="font-size:13px; color:#475569;">(target ${label}: <b>${escapeHtml(pick.tg)}</b>)</span>`;
       }
     }
+
     const html = `
       ${circledDiffHtml(raw, expected)}
       <span class="${ok ? "tick":"cross"}">${ok ? "✓" : "✗"}</span>
@@ -1855,12 +1690,10 @@ function markTry(t){
 
   scorePill.textContent = `Score: ${correct}/${total} (Need ${need})`;
 
-  // visual cue: green ONLY if full score, else red
   scorePill.classList.remove("scoreBad","scoreOk");
   if(correct === total) scorePill.classList.add("scoreOk");
   else scorePill.classList.add("scoreBad");
 
-  // show mastery immediately after marking (per try)
   setStar(mastered);
 
   if(unlocked && soundOn.checked){
@@ -2038,6 +1871,7 @@ resetBtn.addEventListener("click", resetAll);
 
 /* ======================
    Teacher Panel Logic
+   (NOW includes pupil work shown in panel)
    ====================== */
 function loadTeacherRecords(){
   try{
@@ -2060,6 +1894,24 @@ function fmtTryScore(s){
   const label = `${s.correct}/${s.total}`;
   return `<span class="${cls}">${label}</span>`;
 }
+function fmtDate(ts){
+  try{ return new Date(ts).toLocaleString(); }catch(_){ return ""; }
+}
+function computeOverallMasteryFromExport(exportObj){
+  // same rule you used: if any try is mastered => overall mastered
+  try{
+    const t1 = exportObj?.tries?.[1]?.score?.mastered;
+    const t2 = exportObj?.tries?.[2]?.score?.mastered;
+    const t3 = exportObj?.tries?.[3]?.score?.mastered;
+    return !!(t1 || t2 || t3);
+  }catch(_){
+    return false;
+  }
+}
+function safeId(){
+  return "r_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2,8);
+}
+
 function renderTeacherTable(filterText=""){
   const q = String(filterText||"").trim().toLowerCase();
   const recs = loadTeacherRecords().slice().reverse();
@@ -2067,6 +1919,8 @@ function renderTeacherTable(filterText=""){
     if(!q) return true;
     return String(r.studentName||"").toLowerCase().includes(q);
   });
+
+  recordDetail.innerHTML = "";
 
   if(!rows.length){
     recordsWrap.innerHTML = `<div class="tiny">No records yet.</div>`;
@@ -2080,32 +1934,43 @@ function renderTeacherTable(filterText=""){
           <th style="width:160px;">Pupil</th>
           <th style="width:110px;">Session</th>
           <th style="width:170px;">Dates</th>
-          <th style="width:120px;">Try 1</th>
-          <th style="width:120px;">Try 2</th>
-          <th style="width:120px;">Try 3</th>
-          <th style="width:140px;">Overall</th>
-          <th style="width:130px;">Saved</th>
+          <th style="width:90px;">Try 1</th>
+          <th style="width:90px;">Try 2</th>
+          <th style="width:90px;">Try 3</th>
+          <th style="width:110px;">Overall</th>
+          <th style="width:150px;">Saved</th>
+          <th style="width:160px;">Actions</th>
         </tr>
       </thead>
       <tbody>
   `;
 
   for(const r of rows){
-    const d1 = r.tryDate?.[1] || "";
-    const d2 = r.tryDate?.[2] || "";
-    const d3 = r.tryDate?.[3] || "";
-    const overallMastered = !!r.overallMastered;
+    const d1 = r.export?.tries?.[1]?.date || r.tryDate?.[1] || "";
+    const d2 = r.export?.tries?.[2]?.date || r.tryDate?.[2] || "";
+    const d3 = r.export?.tries?.[3]?.date || r.tryDate?.[3] || "";
+    const overallMastered = (typeof r.overallMastered === "boolean")
+      ? r.overallMastered
+      : computeOverallMasteryFromExport(r.export);
+
+    const s1 = r.export?.tries?.[1]?.score || r.tryScore?.[1] || null;
+    const s2 = r.export?.tries?.[2]?.score || r.tryScore?.[2] || null;
+    const s3 = r.export?.tries?.[3]?.score || r.tryScore?.[3] || null;
 
     html += `
       <tr>
         <td>${escapeHtml(r.studentName||"")}</td>
         <td>${escapeHtml(r.sessionKey||"")}<div class="tiny">${escapeHtml(r.sessionTitle||"")}</div></td>
         <td class="tiny">1: ${escapeHtml(d1)}<br>2: ${escapeHtml(d2)}<br>3: ${escapeHtml(d3)}</td>
-        <td>${fmtTryScore(r.tryScore?.[1])}</td>
-        <td>${fmtTryScore(r.tryScore?.[2])}</td>
-        <td>${fmtTryScore(r.tryScore?.[3])}</td>
+        <td>${fmtTryScore(s1)}</td>
+        <td>${fmtTryScore(s2)}</td>
+        <td>${fmtTryScore(s3)}</td>
         <td>${tag(overallMastered)}</td>
-        <td class="tiny">${escapeHtml(new Date(r.savedAt||Date.now()).toLocaleString())}</td>
+        <td class="tiny">${escapeHtml(fmtDate(r.savedAt||Date.now()))}</td>
+        <td>
+          <button class="btnSmall secondary" type="button" data-action="view" data-id="${escapeHtml(r.id||"")}">View Work</button>
+          <button class="btnSmall danger" type="button" data-action="del" data-id="${escapeHtml(r.id||"")}" style="margin-top:6px;">Delete</button>
+        </td>
       </tr>
     `;
   }
@@ -2124,6 +1989,7 @@ function openTeacherPanel(){
 function closeTeacherPanel(){
   teacherModal.classList.remove("show");
   teacherModal.setAttribute("aria-hidden","true");
+  recordDetail.innerHTML = "";
 }
 
 teacherBtn.addEventListener("click", openTeacherPanel);
@@ -2140,6 +2006,7 @@ function computeOverallMastery(){
   return !!(s1 || s2 || s3);
 }
 
+/* ===== NEW: save full pupil work into teacher record ===== */
 saveRecordBtn.addEventListener("click", ()=>{
   const name = (studentName.value||"").trim();
   if(!name){
@@ -2147,31 +2014,264 @@ saveRecordBtn.addEventListener("click", ()=>{
     return;
   }
 
+  // Ensure we capture latest answers even if teacher didn't press MARK
+  captureAnswers();
+
+  // Build a complete snapshot (includes responses + markHtml)
+  const exportObj = buildExportJson();
+
+  // If not marked, generate markHtml for teacher record preview (without locking UI)
+  // We only compute preview flags; we don't mutate the student UI.
+  const preview = {1:[],2:[],3:[]};
+  for(const t of [1,2,3]){
+    const list = (exportObj.tries?.[t]?.words || []);
+    const res  = (exportObj.tries?.[t]?.responses || []);
+    for(let i=0;i<list.length;i++){
+      const expected = list[i];
+      const raw = res[i] || "";
+      const ok = isCorrect(expected, raw);
+      let tgHint = "";
+      if(SESSION_INFO.markingMode === "phonogram"){
+        const pick = findTargetsInExpected(expected);
+        if(pick.mode === "phonogram") tgHint = pick.tg;
+        if(pick.mode === "magicE") tgHint = "magic-e";
+      }else if(SESSION_INFO.markingMode === "affix"){
+        const pick = findAffixInExpected(expected);
+        if(pick.mode === "affix") tgHint = `${pick.pos}:${pick.tg}`;
+      }
+      preview[t].push({expected, response: raw, ok, target: tgHint});
+    }
+  }
+
   const recs = loadTeacherRecords();
   recs.push({
-    version: "pm-teacher-record-v1",
+    version: "pm-teacher-record-v2",
+    id: safeId(),
     studentName: name,
-    sessionKey: sessionSel.value,
-    sessionTitle: SESSION_INFO.title,
-    markingMode: SESSION_INFO.markingMode,
+    sessionKey: exportObj.sessionKey,
+    sessionTitle: exportObj.sessionInfo?.title || "",
+    markingMode: exportObj.sessionInfo?.markingMode || "",
     tryDate: {...tryDate},
     tryScore: {
-      1: tryScore[1] ? {...tryScore[1]} : null,
-      2: tryScore[2] ? {...tryScore[2]} : null,
-      3: tryScore[3] ? {...tryScore[3]} : null
+      1: tryScore[1] ? {...tryScore[1]} : (exportObj.tries?.[1]?.score ? {...exportObj.tries[1].score} : null),
+      2: tryScore[2] ? {...tryScore[2]} : (exportObj.tries?.[2]?.score ? {...exportObj.tries[2].score} : null),
+      3: tryScore[3] ? {...tryScore[3]} : (exportObj.tries?.[3]?.score ? {...exportObj.tries[3].score} : null)
     },
     overallMastered: computeOverallMastery(),
+    // ✅ The key part you asked for:
+    export: exportObj,      // full pupil work snapshot
+    preview: preview,       // quick per-word correctness for teacher view
     savedAt: Date.now()
   });
+
   saveTeacherRecords(recs);
   renderTeacherTable(teacherSearch.value);
-  alert("Saved to Teacher Records.");
+  alert("Saved to Teacher Records (including pupil’s work).");
+});
+
+/* ===== Teacher Panel: View Work + Delete ===== */
+function getRecordById(id){
+  const recs = loadTeacherRecords();
+  return recs.find(r => String(r.id||"") === String(id||"")) || null;
+}
+function deleteRecordById(id){
+  const recs = loadTeacherRecords();
+  const next = recs.filter(r => String(r.id||"") !== String(id||""));
+  saveTeacherRecords(next);
+}
+
+function renderRecordDetail(rec){
+  if(!rec){
+    recordDetail.innerHTML = "";
+    return;
+  }
+  const exp = rec.export || null;
+  const overall = (typeof rec.overallMastered === "boolean") ? rec.overallMastered : computeOverallMasteryFromExport(exp);
+
+  const d1 = exp?.tries?.[1]?.date || rec.tryDate?.[1] || "";
+  const d2 = exp?.tries?.[2]?.date || rec.tryDate?.[2] || "";
+  const d3 = exp?.tries?.[3]?.date || rec.tryDate?.[3] || "";
+
+  const s1 = exp?.tries?.[1]?.score || rec.tryScore?.[1] || null;
+  const s2 = exp?.tries?.[2]?.score || rec.tryScore?.[2] || null;
+  const s3 = exp?.tries?.[3]?.score || rec.tryScore?.[3] || null;
+
+  let tabs = `
+    <div class="miniTabs" role="tablist" aria-label="Try selector">
+      <button class="miniTab active" data-trytab="1" type="button">Try 1</button>
+      <button class="miniTab" data-trytab="2" type="button">Try 2</button>
+      <button class="miniTab" data-trytab="3" type="button">Try 3</button>
+    </div>
+  `;
+
+  function buildWorkTable(t){
+    const words = exp?.tries?.[t]?.words || [];
+    const resps = exp?.tries?.[t]?.responses || [];
+    const markHtml = exp?.tries?.[t]?.markHtml || [];
+    const score = exp?.tries?.[t]?.score || null;
+
+    if(!words.length){
+      return `<div class="tiny">No words found for Try ${t}.</div>`;
+    }
+
+    let head = `
+      <div class="tiny" style="margin-bottom:8px;">
+        <b>Date:</b> ${escapeHtml((t===1?d1:t===2?d2:d3) || "—")}
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <b>Score:</b> ${score ? `${score.correct}/${score.total} (Need ${score.need})` : "—"}
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <b>Mode:</b> ${escapeHtml(String(exp?.sessionInfo?.markingMode || rec.markingMode || ""))}
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <b>Overall:</b> ${overall ? "Mastered" : "Working"}
+      </div>
+    `;
+
+    let rows = "";
+    for(let i=0;i<words.length;i++){
+      const expected = words[i];
+      const respRaw  = resps[i] ?? "";
+      const ok = isCorrect(expected, respRaw);
+
+      let target = "";
+      if((exp?.sessionInfo?.markingMode || rec.markingMode) === "phonogram"){
+        const pick = findTargetsInExpected(expected);
+        if(pick.mode === "phonogram") target = pick.tg;
+        if(pick.mode === "magicE") target = "magic-e";
+      }else if((exp?.sessionInfo?.markingMode || rec.markingMode) === "affix"){
+        const pick = findAffixInExpected(expected);
+        if(pick.mode === "affix"){
+          target = (pick.pos === "prefix") ? `prefix: ${pick.tg}` : `suffix: ${pick.tg}`;
+        }
+      }
+
+      const diff = markHtml[i] || `
+        ${circledDiffHtml(respRaw, expected)}
+        <span class="${ok ? "tick":"cross"}">${ok ? "✓" : "✗"}</span>
+        ${target ? `<span style="font-size:13px; color:#475569;">(target: <b>${escapeHtml(target)}</b>)</span>` : ``}
+        <div class="correctSp"><span class="label">Correct spelling:</span> ${escapeHtml(expected)}</div>
+      `;
+
+      rows += `
+        <tr>
+          <td style="width:46px;">${i+1}</td>
+          <td style="width:140px;">${escapeHtml(expected)}</td>
+          <td style="width:180px;">${escapeHtml(respRaw || "")}</td>
+          <td style="width:90px;">${ok ? `<span class="tagOk">✓</span>` : `<span class="tagBad">✗</span>`}</td>
+          <td>${diff}</td>
+        </tr>
+      `;
+    }
+
+    return head + `
+      <table class="workTable">
+        <thead>
+          <tr>
+            <th style="width:46px;">#</th>
+            <th style="width:140px;">Word</th>
+            <th style="width:180px;">Pupil’s spelling</th>
+            <th style="width:90px;">Result</th>
+            <th>Marking (circled diff + correct spelling)</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `;
+  }
+
+  const detailHtml = `
+    <div class="detailCard">
+      <div class="detailHdr">
+        <div class="meta">
+          <div class="big">
+            <b>${escapeHtml(rec.studentName||"")}</b> — ${escapeHtml(rec.sessionKey||"")} <span class="tiny">${escapeHtml(rec.sessionTitle||"")}</span>
+          </div>
+          <div class="small">
+            Saved: ${escapeHtml(fmtDate(rec.savedAt||Date.now()))}
+          </div>
+        </div>
+        <div class="leftCtl">
+          <button class="btnSmall secondary" type="button" id="dlOneRec">Download This Record</button>
+          <button class="btnSmall secondary" type="button" id="closeDetail">Hide</button>
+        </div>
+      </div>
+      <div class="detailBody">
+        ${tabs}
+        <div id="tryDetailBody">${buildWorkTable(1)}</div>
+      </div>
+    </div>
+  `;
+
+  recordDetail.innerHTML = detailHtml;
+
+  // tab switching
+  const tabBtns = recordDetail.querySelectorAll(".miniTab");
+  const body = recordDetail.querySelector("#tryDetailBody");
+  tabBtns.forEach(b=>{
+    b.addEventListener("click", ()=>{
+      tabBtns.forEach(x=>x.classList.remove("active"));
+      b.classList.add("active");
+      const t = +b.dataset.trytab;
+      body.innerHTML = buildWorkTable(t);
+      body.scrollIntoView({block:"nearest"});
+    });
+  });
+
+  // download one record
+  const dl = recordDetail.querySelector("#dlOneRec");
+  if(dl){
+    dl.addEventListener("click", ()=>{
+      const obj = {
+        version: "pm-teacher-record-single-export-v1",
+        exportedAt: new Date().toISOString(),
+        record: rec
+      };
+      const blob = new Blob([JSON.stringify(obj, null, 2)], {type:"application/json"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      const base = (rec.studentName ? rec.studentName.replace(/[^\w\-]+/g,"_") : "PM_Record");
+      a.download = `${base}_${rec.sessionKey}_TeacherRecord_${todayYMD()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url), 250);
+    });
+  }
+
+  const close = recordDetail.querySelector("#closeDetail");
+  if(close){
+    close.addEventListener("click", ()=>{ recordDetail.innerHTML = ""; });
+  }
+}
+
+recordsWrap.addEventListener("click", (e)=>{
+  const btn = e.target.closest("button[data-action]");
+  if(!btn) return;
+  const act = btn.dataset.action;
+  const id = btn.dataset.id;
+
+  if(act === "view"){
+    const rec = getRecordById(id);
+    if(!rec){
+      alert("Record not found (maybe deleted).");
+      renderTeacherTable(teacherSearch.value);
+      return;
+    }
+    renderRecordDetail(rec);
+  }
+
+  if(act === "del"){
+    if(!confirm("Delete this record? This cannot be undone.")) return;
+    deleteRecordById(id);
+    recordDetail.innerHTML = "";
+    renderTeacherTable(teacherSearch.value);
+  }
 });
 
 exportRecordsBtn.addEventListener("click", ()=>{
   const recs = loadTeacherRecords();
   const obj = {
-    version: "pm-teacher-records-export-v1",
+    version: "pm-teacher-records-export-v2",
     exportedAt: new Date().toISOString(),
     records: recs
   };
@@ -2193,13 +2293,20 @@ importRecordsFile.addEventListener("change", async (e)=>{
   try{
     const text = await file.text();
     const data = JSON.parse(text);
-    if(!data || data.version !== "pm-teacher-records-export-v1" || !Array.isArray(data.records)){
+
+    const okV2 = (data && data.version === "pm-teacher-records-export-v2" && Array.isArray(data.records));
+    const okV1 = (data && data.version === "pm-teacher-records-export-v1" && Array.isArray(data.records));
+
+    if(!okV2 && !okV1){
       alert("Not a valid Teacher Records JSON.");
       importRecordsFile.value = "";
       return;
     }
+
+    // If importing v1, keep it (but it won't have export/work). Still fine.
     saveTeacherRecords(data.records);
     renderTeacherTable(teacherSearch.value);
+    recordDetail.innerHTML = "";
     alert("Teacher records imported.");
   }catch(err){
     alert("Failed to import. File may be corrupted.");
@@ -2211,6 +2318,7 @@ importRecordsFile.addEventListener("change", async (e)=>{
 clearRecordsBtn.addEventListener("click", ()=>{
   if(!confirm("Clear ALL teacher records on this browser? This cannot be undone.")) return;
   saveTeacherRecords([]);
+  recordDetail.innerHTML = "";
   renderTeacherTable(teacherSearch.value);
 });
 
@@ -2220,7 +2328,7 @@ clearRecordsBtn.addEventListener("click", ()=>{
 function renderSessionHeader(){
   const key = sessionSel.value;
   sessionTag.textContent = key;
-  subText.innerHTML = `<b>${escapeHtml(key)}:</b> ${escapeHtml(SESSION_INFO.title.replace(/^C\d+S\d+\s—\s?/, ""))}. Mastery is <b>about 80%</b>.`;
+  subText.innerHTML = `<b>${escapeHtml(key)}:</b> ${escapeHtml(SESSION_INFO.title.replace(/^C\\d+S\\d+\\s—\\s?/, ""))}. Mastery is <b>about 80%</b>.`;
   modeHint.textContent = SESSION_INFO.hint || "";
 }
 
@@ -2232,7 +2340,6 @@ function applySession(key, silent){
   SESSION_INFO = {...info};
   TRIES = JSON.parse(JSON.stringify(pack));
 
-  // reset pupil UI/state (keep teacher records)
   setStar(false);
   scorePill.textContent = "Score: —";
   scorePill.classList.remove("scoreBad","scoreOk");
@@ -2275,7 +2382,6 @@ sessionSel.addEventListener("change", ()=>{
    ====================== */
 (function initSessions(){
   const keys = Object.keys(SESSION_BANK);
-  // sort by cycle then session
   keys.sort((a,b)=>{
     const pa = a.match(/^C(\d+)S(\d+)$/), pb = b.match(/^C(\d+)S(\d+)$/);
     const ca = +(pa?.[1]||0), sa = +(pa?.[2]||0);
